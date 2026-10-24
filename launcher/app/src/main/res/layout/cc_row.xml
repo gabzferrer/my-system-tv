@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A Control Center row: a blue circle with the icon, a title and a status line under it. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="10dp"
+    android:background="@drawable/cc_item_bg"
+    android:focusable="true"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/ccIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="6dp"
+        android:background="@drawable/cc_circle_on"
+        android:contentDescription="@null" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:duplicateParentState="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ccTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/pill_text"
+            android:duplicateParentState="true"
+            android:textSize="13sp"
+            android:fontFamily="@string/font_medium"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/ccStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/pill_text_dim"
+            android:duplicateParentState="true"
+            android:textSize="11sp"
+            android:fontFamily="@string/font_body"
+            android:singleLine="true"
+            android:ellipsize="end" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A Control Center capsule (My System TV), used by the Inputs menu's rows: glass without a blur (the TV draws none
+     behind a window), a faint dark base so white text reads over a bright video, a white sheen and a light rim; solid
+     white while focused. QuickSettingsActivity draws the same in code. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#F7FAFAFC" />
+            <corners android:radius="23dp" />
+        </shape>
+    </item>
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#2E0C0E16" />
+                    <corners android:radius="23dp" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <gradient android:angle="315" android:startColor="#4DFFFFFF" android:centerColor="#1AFFFFFF"
+                        android:endColor="#29FFFFFF" />
+                    <stroke android:width="0.75dp" android:color="#59FFFFFF" />
+                    <corners android:radius="23dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

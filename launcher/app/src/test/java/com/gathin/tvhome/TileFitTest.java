@@ -40,7 +40,8 @@ public class TileFitTest {
     @Test
     public void oneRowUnderATitledDockFits() {
         int w = AppAdapter.tileWidthPx(INNER, GRID_H, 4, 1, true, true, D);
-        assertTrue(w < AppAdapter.tileWidthPx(INNER, 4, D));
+        // My System TV: the dock sits lower (BOTTOM_ROOM_DP 0), so one row fits at full width.
+        assertTrue(w <= AppAdapter.tileWidthPx(INNER, 4, D));
         assertTrue(height(w, 1, true) <= GRID_H + 2);
     }
 
@@ -66,7 +67,8 @@ public class TileFitTest {
 
     @Test
     public void droppingTheTitleGivesBiggerTiles() {
+        // My System TV: both already fit at full width (see oneRowUnderATitledDockFits), so never smaller.
         assertTrue(AppAdapter.tileWidthPx(INNER, GRID_H, 4, 1, false, true, D)
-                > AppAdapter.tileWidthPx(INNER, GRID_H, 4, 1, true, true, D));
+                >= AppAdapter.tileWidthPx(INNER, GRID_H, 4, 1, true, true, D));
     }
 }

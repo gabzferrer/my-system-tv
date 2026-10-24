@@ -16,6 +16,9 @@ def views(folder):
 
 class HebrewResourcesTest(unittest.TestCase):
     def test_hebrew_home_keeps_all_default_view_ids_and_types(self):
+        # My System TV has no Hebrew copy of its Home: Hebrew uses the default layout, which has every view.
+        if not (RES / "layout-iw" / "activity_main.xml").is_file():
+            self.skipTest("no layout-iw: Hebrew falls back to the default layout")
         default, hebrew = views("layout"), views("layout-iw")
         for view_id, tag in default.items():
             with self.subTest(view=view_id):

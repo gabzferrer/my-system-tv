@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tu versión personal: copia esta carpeta "res" a launcher/app/src/release/res y cambia lo que quieras.
+     Lo que pongas ahí reemplaza a res/values/config.xml solo en tu compilación, y git nunca lo sube. -->
+<resources>
+    <!-- Tu nombre en el saludo ("Buenas noches, Ana"). Vacío: solo el saludo. -->
+    <string name="greeting_name" translatable="false">Ana</string>
+    <!-- Tu ciudad para el clima y sus coordenadas (búscalas en Google Maps). -->
+    <string name="weather_label" translatable="false">Guadalajara</string>
+    <string name="weather_latitude" translatable="false">20.67</string>
+    <string name="weather_longitude" translatable="false">-103.35</string>
+</resources>

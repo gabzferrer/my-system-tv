@@ -98,6 +98,20 @@ if [ -f "$THEME/wallpapers/captions.txt" ]; then
 else
   tv "$(del wallpapers/captions.txt)" >/dev/null
 fi
+# My System TV (app_backdrops): one picture per app, backdrops/<package>.jpg, shown when its dock tile is focused.
+tv "mkdir -p $DIR/backdrops 2>/dev/null; rm -f $DIR/backdrops/* 2>/dev/null; content delete --uri $URI/backdrops 2>/dev/null" >/dev/null
+if [ -d "$THEME/backdrops" ]; then
+  for IMAGE in "$THEME"/backdrops/*; do
+    [ -f "$IMAGE" ] || continue
+    case "$IMAGE" in
+      *.jpg|*.jpeg|*.png|*.webp)
+        NAME=$(basename "$IMAGE")
+        [[ "$NAME" =~ ^[A-Za-z0-9_.-]+$ ]] || { echo "unsupported backdrop filename: $NAME" >&2; exit 1; }
+        "$PY" -I b64push.py "$IMAGE" "$(stage "backdrops/$NAME")"
+        tv "$(put "backdrops/$NAME")" >/dev/null ;;
+    esac
+  done
+fi
 tv "printf '%s' '$REVISION' > $TMP-theme_revision; $(put theme_revision)" >/dev/null
 tv "$RESTART; echo applied" | tail -n 1
 echo "Theme $(basename "$THEME") is on the TV. Undo with: tools/theme.sh --reset"

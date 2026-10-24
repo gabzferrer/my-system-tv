@@ -63,9 +63,11 @@ final class Sky {
             new Stop(320, NIGHT_TOP, NIGHT_MID, NIGHT_BOTTOM, 0, 0.30f),
             new Stop(390, 0xFF160F2E, 0xFF3B2352, 0xFF8A4A6B, 100, 0.24f),
             new Stop(450, 0xFF12203F, 0xFF5C3A63, 0xFFD3674F, 160, 0.30f),
-            new Stop(570, 0xFF0E1A33, 0xFF1F3557, 0xFF43648B, 90, 0.38f),
-            new Stop(780, 0xFF0B1524, 0xFF17304F, 0xFF31587F, 60, 0.50f),
-            new Stop(1020, 0xFF0D1526, 0xFF20395C, 0xFF4C5470, 90, 0.62f),
+            // My System TV: a brighter blue day, closer to the prototype, still dark enough at the top for the
+            // white header text.
+            new Stop(570, 0xFF173560, 0xFF2C5A8E, 0xFF5B8CBE, 90, 0.38f),
+            new Stop(780, 0xFF183E6E, 0xFF326BA3, 0xFF68A0D2, 60, 0.50f),
+            new Stop(1020, 0xFF1B365F, 0xFF365A88, 0xFF7484A6, 90, 0.62f),
             new Stop(1140, 0xFF1B1030, 0xFF6C2E52, 0xFFE2704A, 190, 0.76f),
             new Stop(1185, 0xFF140C27, 0xFF4A2049, 0xFFA54A5C, 130, 0.82f),
             new Stop(1260, 0xFF0A0A1C, 0xFF191230, 0xFF3A1F49, 60, 0.86f),

@@ -1,0 +1,18 @@
+{
+  "dock_glass": true,
+  "dock_even_padding": true,
+  "cinematic_home": false,
+  "ambient_glow": false,
+  "sky_intensity": 90,
+  "columns": 5,
+  "always_show_names": false,
+  "show_network_pill": false,
+  "icon_only_buttons": true,
+  "icon_only_inputs": true,
+  "advanced_effects": true,
+  "home_idle_clock_minutes": 10,
+  "greeting_name": "",
+  "weather_label": "Ciudad de México",
+  "weather_latitude": "19.43",
+  "weather_longitude": "-99.13"
+}

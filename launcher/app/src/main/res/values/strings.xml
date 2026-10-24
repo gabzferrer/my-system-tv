@@ -145,4 +145,27 @@
     <!-- Cinematic top shelf (cinematic_home): the line under the focused dock app's name; %1$s is when it was
          last opened, e.g. "5 minutes ago" or "yesterday, 9:40 pm". -->
     <string name="last_opened">Last opened %1$s</string>
+
+    <!-- My System TV's design -->
+    <string name="home_tile">Home</string>
+    <string name="search">Search</string>
+    <string name="control_center">Control Center</string>
+    <string name="quick_bluetooth">Bluetooth</string>
+    <string name="quick_screensaver">Screensaver</string>
+    <string name="quick_reorder">Arrange apps</string>
+    <string name="screensaver_hint">Press any key to resume</string>
+    <string name="cc_on">On</string>
+    <string name="cc_off">Off</string>
+    <string name="cc_reorder">Arrange</string>
+    <string name="cc_apps">Apps</string>
+    <string name="cc_launcher">Launcher</string>
+    <string name="cc_fondo">Wallpaper</string>
+    <string name="cc_fondo_hint">Pick the Home screen background.</string>
+    <string name="continue_watching">Continue watching</string>
+    <string name="showcase_continue">Continue</string>
+    <string name="showcase_next">Next</string>
+    <string name="showcase_watch">Watch</string>
+    <string name="showcase_recommended">Recommended</string>
+    <string name="cc_mode_b">Mode B</string>
+    <string name="cc_mode_ab">Mode A + B</string>
 </resources>

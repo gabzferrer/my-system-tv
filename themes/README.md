@@ -20,6 +20,7 @@ powershell -ExecutionPolicy Bypass -File tools\theme.ps1 -TvHost 192.168.1.50 th
 | `glass/` | Dark navy wallpaper with soft teal and violet light, the cinematic top shelf, a frosted-glass dock, icon-only buttons and the focus glow in the app's colour, gliding without overshoot | <img src="glass/screenshot.jpg" width="320" alt="glass theme"> |
 | `scenes/` | 14 dark illustrated landscapes in `wallpapers/`, a new one every hour; drawn from code by `tools/scenes_wallpapers.py` | <img src="scenes/screenshot.jpg" width="320" alt="scenes theme"> |
 | `six-columns/` | Six smaller tiles per row and one grid row visible under the dock | <img src="six-columns/screenshot.jpg" width="320" alt="six-columns theme"> |
+| `my-system-tv/` | My System TV: video backgrounds, a black glass dock, Seguir viendo and the showcase. Set `greeting_name` and the `weather_*` keys to your own name and city | <img src="my-system-tv/screenshot.jpg" width="320" alt="my-system-tv theme"> |
 
 Every theme folder has a `screenshot.jpg` of Home with that theme on a real TV. `tools/theme.sh` never
 pushes it; it is only here so you can see a theme before you try it.
@@ -64,6 +65,8 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `library_apps` | list of package names | Packages pre-seeded into the App library's "added" set at startup (config.xml `library_apps`, or a theme's `config.json`). They show on Home as if the owner had added them in the App library UI, and stay removable there (a removed one stays hidden); empty (off) by default |
 | `shamsi_date` | bool | Show the Solar Hijri date above the Gregorian one |
 | `greeting_name` | string | A name after the greeting, e.g. `"Mr. Trịnh"` for GOOD MORNING, MR. TRỊNH; empty for the greeting alone |
+| `weather_label` | string | My System TV: the place named in the weather line under the clock, e.g. `"Guadalajara"` |
+| `weather_latitude`, `weather_longitude` | string | My System TV: that place's coordinates in decimal degrees, e.g. `"20.67"` and `"-103.35"`; only these are sent to Open-Meteo |
 | `module_cards` | bool | Look for module cards and ask about them (`true`); `false` turns the feature off |
 | `reduced_motion` | bool | Calmer motion for weak GPUs: the highlight slides without bouncing and settles within 5 frames, every animation lasts 90 ms or less, names, the top shelf, the glow and the highlight appear instead of fading, and there is no tile entrance (`false` by default) |
 | `boot_to_live_tv` | bool | Open the Live TV app (`live_tv_package`) on the first Home after the TV starts, once per boot |

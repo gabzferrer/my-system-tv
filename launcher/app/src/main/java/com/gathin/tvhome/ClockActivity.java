@@ -21,6 +21,11 @@ public class ClockActivity extends Activity {
         setContentView(R.layout.dream_clock);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        // My System TV: the screen dims while the clock is up, to save power; the TV's own brightness comes back
+        // as soon as this window goes away.
+        android.view.WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = 0.05f;
+        getWindow().setAttributes(lp);
         scene = new ClockScene(getWindow().getDecorView());
     }
 

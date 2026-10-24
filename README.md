@@ -1,3 +1,110 @@
+# My System TV
+
+**Mi tele Hisense con Google TV, con cara de Apple TV.** Un launcher hecho dirigiendo a [Claude Code](https://claude.com/claude-code), basado en el proyecto de código abierto **[Clean Your TV](https://github.com/Gathin23/cleanyourtv)** de Gathin. Todo por Wi-Fi desde una MacBook, sin root.
+
+<p align="center"><img src="themes/my-system-tv/screenshot.jpg" width="800" alt="Inicio de My System TV: fondo de video de secuoyas, reloj, clima y el dock de vidrio negro"></p>
+
+> ⚠️ **Solo lo he probado en mi tele:** una **Hisense 55A6N (55", 4K) con Google TV, Android 12**. En otras teles con Android TV o Google TV (Android 8 o más nuevo) la base debería funcionar, pero no está probado. Algunos accesos (Fotos, Proyectar, TV en vivo y el menú de entradas HDMI) son de Hisense y en otras marcas pueden no aparecer.
+
+## Qué tiene
+
+- 🎬 **Fondos de video en movimiento** que se pausan solos cuando algo los tapa o cuando abres una app. Los videos no vienen incluidos: pones los tuyos (ver [Fondos de video](#fondos-de-video)).
+- ▶️ **Modo B, "Seguir viendo":** al bajar del dock aparece una fila con lo que dejaste a medias en Disney+, HBO Max, Apple TV, ViX, Mercado Play y otras apps que lo publican. El fondo se desenfoca y oscurece, el dock sube y el reloj se va, como en tvOS. Con OK retomas el capítulo.
+- 🖼️ **Modo A + B, la vitrina:** al pasar por una app del dock, lo que estabas viendo llena la pantalla con el título, el episodio, la barra de progreso y un botón **▶ Continuar**. La flecha › pasa al siguiente título. Si la app no tiene nada pendiente (YouTube), muestra sus recomendaciones con **Ver**.
+- 🎛️ **Centro de control propio** (el engrane): Wi-Fi, Bluetooth, fondo, organizar apps, el interruptor **Modo B / Modo A + B**, Ajustes y Launcher.
+- 🔌 **Menú de entradas HDMI** con el mismo diseño de cápsulas de vidrio.
+- 🌤️ Reloj, fecha y clima de tu ciudad (Open-Meteo, sin cuenta).
+- 🧹 Además, todo lo de Clean Your TV para quitar las apps de fábrica, siempre desactivando y nunca desinstalando.
+
+## Rendimiento en mi tele
+
+Tiempo por cuadro (para ir a 60 fps hay que quedar abajo de 16.7 ms), medido con `dumpsys gfxinfo` en la Hisense 55A6N:
+
+| Movimiento | Mediana | 90% de los cuadros |
+|---|---|---|
+| Inicio sin moverse | 0 cuadros redibujados | |
+| Fila "Seguir viendo" | ~9 ms | ~16 ms |
+| Moverse por el dock | ~11–15 ms | ~18–24 ms |
+| Bajar a todas las apps (fondo desenfocado) | ~22 ms | ~32 ms |
+| Abrir el Centro de control | ~21 ms (antes 46 ms) | |
+
+El video de fondo se dibuja en una capa aparte que mezcla el hardware de la tele, lo que ahorró unos 11 ms por cuadro.
+
+## Instalar
+
+Necesitas una computadora en la misma red Wi-Fi que la tele, y en la tele: **Ajustes → Sistema → Acerca de → Compilación** (presiona OK 7 veces) y luego, en **Opciones de desarrollador**, activa **Depuración USB** y **Depuración de red / ADB**.
+
+### Opción 1: la APK lista (más fácil)
+
+1. Descarga `my-system-tv-1.0.apk` de [Releases](https://github.com/gabzferrer/my-system-tv/releases).
+2. Instala [Android platform-tools](https://developer.android.com/tools/releases/platform-tools) (trae `adb`).
+3. En la terminal, con la IP de tu tele (Ajustes → Red):
+
+```bash
+adb connect 192.168.1.50:5555
+adb install -r my-system-tv-1.0.apk
+adb shell cmd package set-home-activity com.gathin.tvhome/.MainActivity
+adb shell pm grant com.gathin.tvhome android.permission.ACCESS_FINE_LOCATION
+```
+
+La primera vez, la tele te pregunta si permites la depuración: acepta. Presiona **Inicio** en el control. Al abrirse, My System TV pide permiso para leer la guía de programas: acéptalo para que salga **"Seguir viendo"**.
+
+### Opción 2: compilar desde el código
+
+Con JDK 17 y el Android SDK (platform 34), como en Clean Your TV:
+
+```bash
+TV_HOST=192.168.1.50 launcher/build-and-install.sh
+TV_HOST=192.168.1.50 tools/theme.sh themes/my-system-tv
+```
+
+Para quitar las apps de fábrica, sigue [PROMPT.md](PROMPT.md) con tu agente (yo usé Claude Code). Lee sus reglas de seguridad antes de empezar.
+
+**Al terminar, apaga la depuración** (USB y de red) en la tele: el puerto 5555 no está cifrado.
+
+## Fondos de video
+
+Los videos no vienen en el repositorio. Descarga los que te gusten de un banco libre como [Pexels](https://www.pexels.com/videos/) (horizontales, 1080p o más), y súbelos con [`tools/fondo.sh`](tools/fondo.sh). El script necesita `ffmpeg` y `adb`; arma un loop continuo de hasta un minuto en 1080p, le pinta los bordes oscuros y lo pone en su lugar:
+
+```bash
+TV_HOST=192.168.1.50 tools/fondo.sh sequoia ~/Descargas/mi-bosque.mp4
+```
+
+Hay cinco lugares, cada uno con su nombre en el Centro de control: `gg-sunset` (Atardecer), `gg-night` (Puente de noche), `sequoia` (Sequoia), `noche` (Noche) y `utah` (Utah). Usa cualquier video en cualquier lugar. Sin videos, queda el **Cielo** dibujado.
+
+## Personaliza
+
+- **Tu nombre y tu ciudad:** edita [`themes/my-system-tv/config.json`](themes/my-system-tv/config.json) (`greeting_name`, `weather_label`, `weather_latitude`, `weather_longitude`) y súbelo con `TV_HOST=<ip> tools/theme.sh themes/my-system-tv`. Sirve también con la APK lista.
+- **Tus iconos:** si compilas, copia [`launcher/personal-ejemplo/res`](launcher/personal-ejemplo) a `launcher/app/src/release/res` y pon ahí tus imágenes y textos. Esa carpeta reemplaza a la original solo en tu compilación y git nunca la sube. Usa solo imágenes que tengas derecho a usar.
+- **Los modos:** el botón redondo del Centro de control cambia entre **Modo B** y **Modo A + B**.
+
+## Permisos
+
+- **Internet:** solo para el clima (Open-Meteo, se mandan únicamente las coordenadas) y para bajar las imágenes que las apps publican para "Seguir viendo". No hay cuentas, anuncios ni estadísticas.
+- **Guía de programas** (`READ_TV_LISTINGS`): para leer lo que dejaste a medias en cada app.
+- **Ubicación:** Android la pide para mostrar el nombre de tu red Wi-Fi.
+- Los demás son los de Clean Your TV (Bluetooth, red y ajustes para los botones del control).
+
+## Volver a como estaba
+
+Pon de nuevo el inicio de tu tele y quita la app:
+
+```bash
+adb shell cmd package set-home-activity <paquete-del-inicio-original>
+adb uninstall com.gathin.tvhome
+```
+
+Si quitaste apps de fábrica con Clean Your TV, `tools/restore.sh` las regresa (ver [Restoring your TV](#restoring-your-tv)).
+
+## Créditos y licencia
+
+- Basado en **[Clean Your TV](https://github.com/Gathin23/cleanyourtv)** de Gathin, licencia MIT. Todo su README sigue abajo.
+- Hecho por [@gabzferrer](https://github.com/gabzferrer) dirigiendo a Claude Code. Iconos de mosaico originales; iconos de botones de Material Icons de Google (Apache 2.0); tipografía Outfit (SIL Open Font License).
+- Las marcas y logos de las apps (Disney+, HBO Max, Apple TV, YouTube y demás) son de sus dueños: en la tele salen los banners que cada app trae.
+- Licencia MIT, como el original (ver [LICENSE](LICENSE)).
+
+---
+
 <p align="center">
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore." width="800"></a>
 </p>
@@ -381,6 +488,7 @@ tools/theme.sh themes/aurora                                 # push a theme; --r
 | [`tools/adb-closed.py`](tools/adb-closed.py) | Checks that the TV's network ADB port is closed once debugging is off: exits 0 when nothing answers, 1 while it is still open, 2 when the check itself could not run. No `nc` needed. |
 | [`tools/privacy.py`](tools/privacy.py) | Audits the TV for voice, ACR and telemetry candidates and prints the evidence for each; `--write` turns the findings into a list `disable.sh` and `restore.sh` already understand. |
 | [`tools/theme.sh`](tools/theme.sh) | Push a folder from [`themes/`](themes/) to the launcher and restart Home. |
+| [`tools/fondo.sh`](tools/fondo.sh) | My System TV: turn one of your videos into a Home background and put it on the TV. |
 | [`tools/bench.py`](tools/bench.py) | Measures the launcher that answers HOME: key latency, how far the focus moved, janky frames, cold start, return to Home, and the idle CPU and PSS it costs. Changes nothing on the TV and writes the raw per-key numbers to JSON; no extra install. |
 | [`tools/trace.py`](tools/trace.py), [`trace_report.py`](tools/trace_report.py) | Records Perfetto traces of the launcher (return to Home, cold start, D-pad) and reports where its time goes, per run and before against after. Optional: needs [`requirements-perf.txt`](tools/requirements-perf.txt). [Guide](tools/trace.md). |
 | [`tools/flamechart.py`](tools/flamechart.py) | Draws a before/after flame chart from those traces, for a pull request: one lane per thread on a shared time scale, the work a change targets in magenta with its total. Optional, like the trace tools. [Guide](tools/flamechart.md). |

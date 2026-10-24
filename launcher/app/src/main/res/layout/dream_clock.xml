@@ -5,10 +5,12 @@
     android:layout_height="match_parent"
     android:background="#FF000000">
 
+    <!-- My System TV: plain black, no coloured glow behind the clock. -->
     <View
         android:id="@+id/dreamAmbient"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/dreamContent"
@@ -27,8 +29,8 @@
                 android:layout_height="wrap_content"
                 android:format12Hour="h:mm"
                 android:format24Hour="HH:mm"
-                android:textColor="#E6FFFFFF"
-                android:textSize="120sp"
+                android:textColor="#F2FFFFFF"
+                android:textSize="230sp"
                 android:fontFamily="@string/font_extralight"
                 android:letterSpacing="-0.04"
                 android:includeFontPadding="false" />
@@ -57,6 +59,21 @@
             android:textSize="18sp"
             android:fontFamily="@string/font_regular"
             android:letterSpacing="0.14"
-            android:textAllCaps="true" />
+            android:textAllCaps="true"
+            android:visibility="gone" />
     </LinearLayout>
+
+    <!-- As in the design prototype: a light line pinned to the bottom edge. -->
+    <TextView
+        android:id="@+id/dreamHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="36dp"
+        android:text="@string/screensaver_hint"
+        android:textColor="#FF1E90FF"
+        android:textSize="11sp"
+        android:fontFamily="@string/font_light"
+        android:letterSpacing="0.18"
+        android:textAllCaps="true" />
 </FrameLayout>

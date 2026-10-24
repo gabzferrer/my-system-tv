@@ -47,6 +47,15 @@
             android:textSize="13sp"
             android:fontFamily="@string/font_body"
             android:visibility="gone" />
+
+        <!-- focus_shine: a light band that crosses the tile once when it takes focus; the card clips it. -->
+        <View
+            android:id="@+id/shine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shine_sweep"
+            android:visibility="invisible"
+            android:importantForAccessibility="no" />
     </FrameLayout>
 
     <TextView

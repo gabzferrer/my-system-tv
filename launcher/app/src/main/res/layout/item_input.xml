@@ -1,50 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- An Inputs menu row (My System TV), as a Control Center capsule: the icon in a white disc, the name, and the
+     port's state under it. MainActivity.addInputRow fills it. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="42dp"
+    android:layout_height="46dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingStart="12dp"
-    android:paddingEnd="12dp"
-    android:background="@drawable/input_row_bg"
+    android:paddingStart="7dp"
+    android:paddingEnd="14dp"
+    android:background="@drawable/cc_glass_pill"
     android:focusable="true"
     android:clickable="true">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:tint="@drawable/pill_text"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="7dp"
+        android:background="@drawable/cc_disc"
+        android:tint="@color/cc_disc_icon"
         android:duplicateParentState="true"
+        android:elevation="2dp"
         android:contentDescription="@null" />
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="12dp"
-        android:textColor="@drawable/pill_text"
-        android:duplicateParentState="true"
-        android:textSize="15sp"
-        android:fontFamily="@string/font_medium"
-        android:singleLine="true" />
+        android:layout_marginStart="9dp"
+        android:orientation="vertical"
+        android:duplicateParentState="true">
 
-    <View
-        android:id="@+id/dot"
-        android:layout_width="7dp"
-        android:layout_height="7dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/status_dot" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/pill_text"
+            android:duplicateParentState="true"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:fontFamily="@string/font_medium"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:ellipsize="end" />
 
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@drawable/pill_text_dim"
-        android:duplicateParentState="true"
-        android:textSize="11sp"
-        android:fontFamily="@string/font_body"
-        android:letterSpacing="0.04" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:duplicateParentState="true">
+
+            <View
+                android:id="@+id/dot"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/status_dot" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@drawable/pill_text_dim"
+                android:duplicateParentState="true"
+                android:textSize="8.5sp"
+                android:fontFamily="@string/font_body"
+                android:includeFontPadding="false"
+                android:singleLine="true" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

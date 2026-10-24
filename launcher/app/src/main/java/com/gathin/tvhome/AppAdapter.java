@@ -62,7 +62,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     static final class Entry {
-        static final int APP = 0, HOME_SETTINGS = 1, CARD = 2, EMPTY = 3;
+        /** HOME_TILE: the "Inicio" tile at the head of the dock (config.xml home_tile); it opens nothing. */
+        static final int APP = 0, HOME_SETTINGS = 1, CARD = 2, EMPTY = 3, HOME_TILE = 4;
 
         final int kind;
         final String label;
@@ -134,7 +135,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /** DockDecoration's offsets above and below the dock row. */
     static final float DOCK_EXTRA_DP = 6 + 12;
     /** Room kept under the last row rows_below_dock asks for (MainActivity places the dock with the same). */
-    static final float BOTTOM_ROOM_DP = 30;
+    static final float BOTTOM_ROOM_DP = 0;   // My System TV: 30 upstream, then 12; the dock sits lower
     /** Room kept above the dock for the dock title (48sp hero name plus its 40dp gap) when dock_title is on. */
     static final float TITLE_ROOM_DP = 104;
     /** dock_row false: room above the first row for its zoom and glass (MainActivity places the grid with it). */
@@ -314,8 +315,12 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     new ComponentName(ctx, HomeSettingsActivity.class), null,
                     ctx.getDrawable(R.drawable.ic_home_settings), null, 0));
         }
+        if (dockRow && ctx.getResources().getBoolean(R.bool.home_tile)) {
+            fresh.add(0, new Entry(Entry.HOME_TILE, ctx.getString(R.string.home_tile),
+                    new ComponentName(ctx, "home-tile"), ctx.getDrawable(R.drawable.banner_home), null, null, 0xFF3B82F6));
+        }
         docked = 0;
-        while (docked < fresh.size() && isDocked(fresh.get(docked))) docked++;
+        while (docked < fresh.size() && (fresh.get(docked).kind == Entry.HOME_TILE || isDocked(fresh.get(docked)))) docked++;
         emptySlots = dockRow && !reordering ? DockSlots.empty(docked, dockSize, fresh.size(), fillDock) : 0;
         for (int i = 0; i < emptySlots; i++) {
             fresh.add(docked + i, new Entry(Entry.EMPTY, "", new ComponentName(ctx, "empty-dock-slot-" + i),
@@ -451,6 +456,10 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             h.label.setVisibility(View.VISIBLE);
         }
         h.card.setOnClickListener(v -> launch(e));
+        if (e.kind == Entry.HOME_TILE) {
+            h.card.setOnLongClickListener(v -> true);
+            return;
+        }
         h.card.setOnLongClickListener(v -> {
             if (tileMenu) {
                 int pos = h.getBindingAdapterPosition();
@@ -469,6 +478,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     /** Opens the tile's activity by explicit component, with no extras: a card can name nothing else. */
     private void launch(Entry e) {
+        if (e.kind == Entry.HOME_TILE) return;   // focusing it already shows the clean sky
         if (e.kind == Entry.HOME_SETTINGS) {
             ctx.startActivity(new Intent(ctx, HomeSettingsActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -504,6 +514,11 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     int appCount() { return items.size(); }
+
+    /** The "Inicio" tile (home_tile): it never moves, opens nothing and has no backdrop. */
+    boolean isHomeTileAt(int position) {
+        return position >= 0 && position < items.size() && items.get(position).kind == Entry.HOME_TILE;
+    }
 
     boolean isLibraryAt(int position) { return showLibrary && position == items.size(); }
 
@@ -681,6 +696,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final ImageView icon;
         final TextView label;
         final TextView name;
+        final View shine;
         final boolean animations;
         final boolean advancedEffects;
         final boolean reducedMotion;
@@ -697,6 +713,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             icon = v.findViewById(R.id.icon);
             label = v.findViewById(R.id.label);
             name = v.findViewById(R.id.name);
+            shine = v.findViewById(R.id.shine);
             this.animations = animations;
             this.advancedEffects = advancedEffects;
             this.reducedMotion = reducedMotion;
@@ -725,6 +742,9 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 view.animate().cancel();
                 banner.animate().cancel();
                 name.animate().cancel();
+                // My System TV: the focused tile shows its own colours a little richer instead of a white sheen
+                // over it (GlassView no longer draws one).
+                banner.setColorFilter(focused ? VIVID : null);
                 float scale = !animations ? 1f : advancedEffects ? 1.12f : 1.10f;
                 float s = focused ? scale : 1f;
                 if (!animations) {
@@ -765,12 +785,40 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     name.animate().alpha(focused ? 1f : restNameAlpha)
                             .translationY(focused ? density * 4f : -density * 6f)
                             .setDuration(220).start();
+                    if (view.getResources().getBoolean(R.bool.focus_shine)) sweep(focused, view.getWidth());
                 }
                 int pos = getBindingAdapterPosition();
                 if (focused && listener != null && pos != RecyclerView.NO_POSITION) {
                     listener.onTileFocused(pos, view);
                 }
             });
+        }
+
+        /** The focused tile's colour boost: saturation up by a quarter. */
+        private static final android.graphics.ColorMatrixColorFilter VIVID;
+
+        static {
+            android.graphics.ColorMatrix m = new android.graphics.ColorMatrix();
+            m.setSaturation(1.25f);
+            VIVID = new android.graphics.ColorMatrixColorFilter(m);
+        }
+
+        /** focus_shine: one pass of the light band from left to right as the tile takes focus. */
+        private void sweep(boolean focused, int width) {
+            shine.animate().cancel();
+            if (!focused || width <= 0) {
+                shine.setVisibility(View.INVISIBLE);
+                return;
+            }
+            float band = width * 0.6f;
+            shine.setScaleX(0.6f);   // the band is 60% of the tile wide, as in the prototype
+            shine.setRotation(0f);
+            shine.setTranslationX(-width * 0.5f - band);
+            shine.setAlpha(1f);
+            shine.setVisibility(View.VISIBLE);
+            shine.animate().translationX(width * 0.5f + band).setStartDelay(90).setDuration(650)
+                    .setInterpolator(new DecelerateInterpolator(1.2f))
+                    .withEndAction(() -> shine.setVisibility(View.INVISIBLE)).start();
         }
     }
 }

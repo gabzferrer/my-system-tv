@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A Control Center shortcut: a round icon over a short label. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="52dp"
+    android:layout_weight="1"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/cc_card_focus"
+    android:focusable="true"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/ccIcon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:padding="6dp"
+        android:background="@drawable/cc_circle_off"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/ccTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@drawable/pill_text"
+        android:duplicateParentState="true"
+        android:textSize="11sp"
+        android:fontFamily="@string/font_medium"
+        android:singleLine="true" />
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Control Center's icon disc: white with a blue icon, blue while its row is focused. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape android:shape="oval"><solid android:color="#FF0A84FF" /></shape>
+    </item>
+    <item>
+        <shape android:shape="oval"><solid android:color="#FFFFFFFF" /></shape>
+    </item>
+</selector>

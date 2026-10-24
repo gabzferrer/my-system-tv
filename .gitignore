@@ -19,3 +19,6 @@ traces/
 *.aab
 launcher/hs_err_pid*.log
 launcher/replay_pid*.log
+
+# My System TV: your own build (your icons, name and city) stays on your computer.
+launcher/app/src/release/

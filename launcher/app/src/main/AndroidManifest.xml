@@ -8,6 +8,15 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- My System TV only: the header's weather line (Weather, Open-Meteo). Nothing else goes online. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- My System TV: read what the apps publish to the programme guide (AppContent), their "Continue watching"
+         (watch next) and channel rows. Since Android 11 TvProvider only lets a caller read other apps' rows marked
+         searchable with READ_TV_LISTINGS, a runtime permission ("TV listings"); READ_EPG_DATA alone saw nothing. -->
+    <uses-permission android:name="android.permission.READ_TV_LISTINGS" />
+    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" />
+    <!-- The Control Center's Bluetooth row reads whether Bluetooth is on (Android 11 and older need this). -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- Needed since Android 10 to read the Wi-Fi network name for the network pill. Never requested at
          runtime: build-and-install grants it with pm grant, so lint's Android 12 "ask for COARSE with
@@ -25,6 +34,8 @@
     <!-- Android 11+ package visibility: lets the launcher list the TV apps it shows as tiles, and the
          apps that declare a module card (docs/specs/card.md). -->
     <queries>
+        <!-- AppContent reads the programme guide's provider. -->
+        <provider android:authorities="android.media.tv" />
         <!-- The standard settings handlers, so package visibility doesn't hide them and send the pills to a vendor fallback by mistake. -->
         <intent>
             <action android:name="android.settings.SETTINGS" />

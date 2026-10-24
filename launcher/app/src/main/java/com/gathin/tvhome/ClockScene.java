@@ -25,6 +25,10 @@ final class ClockScene {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Random random = new Random();
     private final View content;
+    private final View ambient;
+    /** The "press any key" line, which breathes slowly (My System TV). */
+    private final View hint;
+    private android.animation.ObjectAnimator breathe;
     private final GradientDrawable glow;
     private int colorIndex;
     private int glowColor;
@@ -33,7 +37,7 @@ final class ClockScene {
         @Override
         public void run() {
             moveClock();
-            shiftGlow();
+            if (ambient.getVisibility() == View.VISIBLE) shiftGlow();   // hidden in the plain black version
             handler.postDelayed(this, MOVE_MS);
         }
     };
@@ -41,7 +45,8 @@ final class ClockScene {
     /** root is the inflated dream_clock layout. */
     ClockScene(View root) {
         content = root.findViewById(R.id.dreamContent);
-        View ambient = root.findViewById(R.id.dreamAmbient);
+        ambient = root.findViewById(R.id.dreamAmbient);
+        hint = root.findViewById(R.id.dreamHint);
         glow = new GradientDrawable();
         glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
         ambient.setBackground(glow);
@@ -59,11 +64,21 @@ final class ClockScene {
         });
         handler.removeCallbacks(tick);
         handler.postDelayed(tick, MOVE_MS);
+        if (hint != null) {
+            // A slow breath: full to a quarter and back, about three seconds each way.
+            breathe = android.animation.ObjectAnimator.ofFloat(hint, View.ALPHA, 1f, 0.25f);
+            breathe.setDuration(3000);
+            breathe.setRepeatCount(android.animation.ValueAnimator.INFINITE);
+            breathe.setRepeatMode(android.animation.ValueAnimator.REVERSE);
+            breathe.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+            breathe.start();
+        }
     }
 
     void stop() {
         handler.removeCallbacksAndMessages(null);   // the tick and any glow steps still queued
         content.animate().cancel();
+        if (breathe != null) breathe.cancel();
     }
 
     private void moveClock() {
@@ -77,7 +92,9 @@ final class ClockScene {
     private void placeClock() {
         View parent = (View) content.getParent();
         int maxX = Math.max(0, parent.getWidth() - content.getWidth());
-        int maxY = Math.max(0, parent.getHeight() - content.getHeight());
+        // My System TV: keep clear of the "press any key" line pinned to the bottom (36dp margin plus its height).
+        int hintRoom = Math.round(80 * parent.getResources().getDisplayMetrics().density);
+        int maxY = Math.max(0, parent.getHeight() - content.getHeight() - hintRoom);
         float x = maxX * (0.1f + 0.8f * random.nextFloat());
         float y = maxY * (0.1f + 0.8f * random.nextFloat());
         content.setX(x);

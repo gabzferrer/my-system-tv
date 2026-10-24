@@ -106,4 +106,26 @@
     <string name="race_live">%1$s · en directo</string>
     <string name="race_finished">Bandera a cuadros</string>
     <string name="last_opened">Abierta por última vez %1$s</string>
+
+    <string name="home_tile">Inicio</string>
+    <string name="search">Buscar</string>
+    <string name="control_center">Centro de control</string>
+    <string name="quick_bluetooth">Bluetooth</string>
+    <string name="quick_screensaver">Salvapantallas</string>
+    <string name="quick_reorder">Organizar apps</string>
+    <string name="screensaver_hint">Presiona cualquier tecla para reanudar</string>
+    <string name="cc_on">Activado</string>
+    <string name="cc_off">Desactivado</string>
+    <string name="cc_reorder">Organizar</string>
+    <string name="cc_apps">Apps</string>
+    <string name="cc_launcher">Launcher</string>
+    <string name="cc_fondo">Fondo</string>
+    <string name="cc_fondo_hint">Elige el fondo de la pantalla de inicio.</string>
+    <string name="continue_watching">Seguir viendo</string>
+    <string name="showcase_continue">Continuar</string>
+    <string name="showcase_next">Siguiente</string>
+    <string name="showcase_watch">Ver</string>
+    <string name="showcase_recommended">Recomendaciones</string>
+    <string name="cc_mode_b">Modo B</string>
+    <string name="cc_mode_ab">Modo A + B</string>
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The light band that crosses a tile when it takes focus (focus_shine). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="0"
+        android:startColor="#00FFFFFF"
+        android:centerColor="#59FFFFFF"
+        android:endColor="#00FFFFFF" />
+</shape>

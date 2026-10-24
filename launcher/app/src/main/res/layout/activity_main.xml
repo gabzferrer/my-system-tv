@@ -5,11 +5,81 @@
     android:layout_height="match_parent"
     android:background="#FF000000">
 
+    <!-- My System TV: the video background (Fondos, VideoBackdrop) in a layer of its own under the window, blended
+         by the display hardware rather than the GPU; everything below is drawn over it, the sky until the video shows.
+         The still is its last frame, covering the new surface on the way back to Home. -->
+    <SurfaceView
+        android:id="@+id/videoBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no" />
+
+    <ImageView
+        android:id="@+id/videoStill"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="invisible"
+        android:importantForAccessibility="no" />
+
     <!-- Time-of-day backdrop, drawn once a minute (config.xml sky_intensity; 0 keeps it hidden). -->
     <com.gathin.tvhome.SkyView
         android:id="@+id/sky"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:importantForAccessibility="no" />
+
+    <!-- sky_scene: slowly drifting clouds over the sky (SkyClouds fills it in code). -->
+    <FrameLayout
+        android:id="@+id/skyClouds"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="true"
+        android:importantForAccessibility="no"
+        android:visibility="gone" />
+
+    <!-- My System TV: the all-apps view's background (HomeBackground). The video's shade is baked into the videos. -->
+
+    <!-- The all-apps view's soft background: a small blurred still of the frame, stretched (MainActivity). -->
+    <ImageView
+        android:id="@+id/allAppsBlur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:alpha="0"
+        android:importantForAccessibility="no" />
+
+    <View
+        android:id="@+id/allAppsScrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FF000000"
+        android:alpha="0"
+        android:importantForAccessibility="no" />
+
+    <!-- app_backdrops: the focused dock app's picture, cross-faded between two layers, and a vignette that keeps
+         the header and the dock readable over it. -->
+    <ImageView
+        android:id="@+id/backdropA"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0"
+        android:importantForAccessibility="no" />
+
+    <ImageView
+        android:id="@+id/backdropB"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0"
+        android:importantForAccessibility="no" />
+
+    <View
+        android:id="@+id/backdropVignette"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
         android:importantForAccessibility="no" />
 
     <!-- Cinematic top shelf (cinematic_home): the focused dock app's artwork, a few pixels across and
@@ -146,7 +216,10 @@
             android:visibility="gone" />
     </LinearLayout>
 
+    <!-- The header. My System TV: the grid is no longer under it but over the whole screen (below), so the
+         all-apps view can lift the dock to the top while the header fades out. -->
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -184,7 +257,7 @@
                     android:ellipsize="end"
                     android:layout_marginStart="4dp"
                     android:textColor="#8CFFFFFF"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:fontFamily="@string/font_medium"
                     android:letterSpacing="0.22"
                     android:textAllCaps="true" />
@@ -202,7 +275,7 @@
                         android:format12Hour="h:mm"
                         android:format24Hour="HH:mm"
                         android:textColor="#FFFFFFFF"
-                        android:textSize="52sp"
+                        android:textSize="68sp"
                         android:fontFamily="@string/font_light"
                         android:letterSpacing="-0.04"
                         android:includeFontPadding="false" />
@@ -213,22 +286,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
                         android:layout_gravity="bottom"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="11dp"
                         android:format12Hour="a"
                         android:format24Hour=""
                         android:textColor="#B3FFFFFF"
-                        android:textSize="15sp"
+                        android:textSize="19sp"
                         android:fontFamily="@string/font_medium"
                         android:letterSpacing="0.08"
                         android:textAllCaps="true" />
 
                     <View
                         android:layout_width="1dp"
-                        android:layout_height="26dp"
+                        android:layout_height="34dp"
                         android:layout_gravity="bottom"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginEnd="18dp"
+                        android:layout_marginBottom="11dp"
                         android:background="#33FFFFFF" />
 
                     <LinearLayout
@@ -236,8 +309,24 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
-                        android:layout_marginBottom="9dp"
+                        android:layout_marginBottom="12dp"
                         android:orientation="vertical">
+
+                        <!-- modern_header: the day name ("Jueves") over the date. -->
+                        <TextView
+                            android:id="@+id/dayName"
+                            android:gravity="left"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="20sp"
+                            android:fontFamily="@string/font_medium"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.02"
+                            android:includeFontPadding="false"
+                            android:layout_marginBottom="6dp"
+                            android:visibility="gone" />
 
                         <!-- Shamsi date ("27 Mehr 1405"), shown when shamsi_date is on. -->
                         <TextView
@@ -266,12 +355,28 @@
                             android:format12Hour="@string/date_format_home"
                             android:format24Hour="@string/date_format_home"
                             android:textColor="#A6FFFFFF"
-                            android:textSize="14sp"
+                            android:textSize="16sp"
                             android:fontFamily="@string/font_regular"
                             android:letterSpacing="0.14"
                             android:textAllCaps="true" />
                     </LinearLayout>
                 </LinearLayout>
+
+                <!-- weather: "☀ 16°C · Ciudad de México (19° / 13°)", filled in by Weather. -->
+                <TextView
+                    android:id="@+id/weather"
+                    android:gravity="left"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:singleLine="true"
+                    android:textColor="#B3FFFFFF"
+                    android:textSize="14sp"
+                    android:fontFamily="@string/font_medium"
+                    android:shadowColor="#80000000"
+                    android:shadowRadius="6"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -299,8 +404,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignBottom="@id/leftBlock"
-                android:layout_marginBottom="6dp"
+                android:layout_alignTop="@id/leftBlock"
+                android:layout_marginTop="2dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:orientation="horizontal">
@@ -338,6 +443,14 @@
                     android:nextFocusDown="@+id/grid" />
 
                 <TextView
+                    android:id="@+id/btnSearch"
+                    style="@style/TopButtonIcon"
+                    android:visibility="gone"
+                    android:contentDescription="@string/search"
+                    android:drawableStart="@drawable/ic_search"
+                    android:nextFocusDown="@+id/grid" />
+
+                <TextView
                     android:id="@+id/btnSettings"
                     style="@style/TopButton"
                     android:text="@string/settings"
@@ -345,29 +458,29 @@
                     android:nextFocusDown="@+id/grid" />
             </LinearLayout>
         </RelativeLayout>
-
-        <!-- The wrapper clips at the grid's edge; the grid itself must not clip so scaled tiles can overflow their cells. -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/grid"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="10dp"
-                android:paddingBottom="40dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:clipToPadding="false"
-                android:clipChildren="false"
-                android:overScrollMode="never"
-                android:scrollbars="none"
-                android:descendantFocusability="afterDescendants" />
-        </FrameLayout>
     </LinearLayout>
+
+    <!-- The wrapper clips at the grid's edge; the grid itself must not clip so scaled tiles can overflow their cells. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="56dp"
+        android:paddingEnd="56dp">
+
+        <com.gathin.tvhome.TopFadeGrid
+            android:id="@+id/grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="40dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:descendantFocusability="afterDescendants" />
+    </FrameLayout>
 
     <!-- The single floating glass highlight that springs between tiles. -->
     <com.gathin.tvhome.GlassView

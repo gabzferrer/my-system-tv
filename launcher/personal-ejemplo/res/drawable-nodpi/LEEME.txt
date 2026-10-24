@@ -1,0 +1,3 @@
+Pon aquí tus propios iconos de mosaico (640x360, PNG o JPG) con estos nombres para reemplazar los de My System TV:
+banner_home, banner_fotos, banner_ajustes, banner_airplay, banner_livetv, banner_arcade, banner_appstore, banner_musica.
+Usa solo imágenes que tengas derecho a usar, y no las subas a GitHub si no son tuyas.

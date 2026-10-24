@@ -17,10 +17,12 @@
 
     <!-- Apps pinned to the dock row at the bottom, in this order. Missing apps are skipped. -->
     <string-array name="dock_apps">
-        <item>com.netflix.ninja</item>
-        <item>com.amazon.amazonvideo.livingroom</item>
+        <item>com.apple.atve.androidtv.appletv</item>
+        <item>com.disney.disneyplus</item>
+        <item>com.wbd.stream</item>
         <item>com.google.android.youtube.tv</item>
-        <item>in.startv.hotstar</item>
+        <item>com.amazon.amazonvideo.livingroom</item>
+        <item>com.univision.prendetv</item>
     </string-array>
     <!-- With fewer dock_apps than columns (or a dock app that is not installed), the free dock slots take
          the first grid apps, so the dock never shows a gap. false leaves them empty (#162); a theme can
@@ -61,10 +63,26 @@
 
     <!-- A tile's name instead of the app's own: "package=Name". It also shows above the dock. -->
     <string-array name="app_labels">
+        <!-- My System TV: short names for the TV's own apps (Hisense packages; absent apps are skipped). -->
+        <item>com.vt.tv.mediacenter=Fotos</item>
+        <item>com.android.tv.settings=Ajustes</item>
+        <item>com.vt.tv.mobiledeviceconnectiontips=Proyectar</item>
+        <item>com.vt.tv.tvcenter=TV en vivo</item>
+        <item>com.google.android.play.games=Juegos</item>
+        <item>com.android.vending=Tienda</item>
+        <item>com.google.android.youtube.tvmusic=Música</item>
     </string-array>
     <!-- A tile's artwork instead of the app's banner: "package=drawable", a banner_* drawable bundled with the
          launcher (res/drawable). banner_tv is a magenta field with the Live TV glyph. -->
     <string-array name="app_banners">
+        <!-- My System TV: its own tile art (res/drawable-nodpi). Your own art can replace it: README, "Personaliza". -->
+        <item>com.vt.tv.mediacenter=banner_fotos</item>
+        <item>com.android.tv.settings=banner_ajustes</item>
+        <item>com.vt.tv.mobiledeviceconnectiontips=banner_airplay</item>
+        <item>com.vt.tv.tvcenter=banner_livetv</item>
+        <item>com.google.android.play.games=banner_arcade</item>
+        <item>com.android.vending=banner_appstore</item>
+        <item>com.google.android.youtube.tvmusic=banner_musica</item>
     </string-array>
 
     <!-- TVs with no TvInputManager have no HDMI list to read, but their own source-selection panel
@@ -116,6 +134,7 @@
          evdev MSC_SCAN there, which is not always the scanCode the framework reports, so a number that takes
          nothing is no proof the press never arrived. Leave empty to omit. -->
     <integer-array name="settings_key_scancodes">
+        <item>598</item>
     </integer-array>
     <!-- The same by Android keycode, for buttons whose scancode is shared. TCL Google TV remotes send their
          Settings button as keycode 83 (KEYCODE_NOTIFICATION, which the stock Google TV home turned into its quick
@@ -129,7 +148,7 @@
     <!-- What those Settings buttons open: false, the TV's Settings; true, a small glass panel at the top right
          with TV settings, Display, Network, Apps (re-enable an app) and Launcher settings, over whatever is on screen.
          Both keys can also be set from a theme's config.json ("settings_key_keycodes": [83]). -->
-    <bool name="settings_key_panel">false</bool>
+    <bool name="settings_key_panel">true</bool>
 
     <!-- A force stop of the launcher (Settings, a cleaner app, am force-stop) takes HomeKeyService and InputKeyService
          off the enabled list. true: Home puts the helpers that were running back when it starts; one turned off in
@@ -166,6 +185,9 @@
          still opens on a tap; "hold:scan:490:..." works for scancodes. A key with only a hold entry does nothing
          on a tap. A listed app that is not installed leaves the button doing nothing. Leave empty to omit. -->
     <string-array name="app_keys" translatable="false">
+        <item>190:com.google.android.youtube.tv</item>
+        <item>scan:419:com.apple.atve.androidtv.appletv</item>
+        <item>scan:557:com.wbd.stream</item>
     </string-array>
 
     <!-- Package of the stock launcher, for TVs whose firmware turns it back on after it was disabled. XGIMI's
@@ -247,7 +269,7 @@
 
     <!-- Tiles per row in the grid; the dock always has this many slots. Tiles are 180dp wide at 4 columns and
          shrink to fit from 5 up (about 144dp at 5, 117dp at 6 on a 1080p TV). -->
-    <integer name="columns">4</integer>
+    <integer name="columns">5</integer>
 
     <!-- Basic motion is on; advanced effects are opt-in in the launcher's own Settings screen. -->
     <bool name="animations">true</bool>
@@ -304,7 +326,7 @@
          colour; the shelf gets a larger name, a "Last opened" line (from the apps Home opened) and dock position
          dots, the focus glow takes the app's colour and the dock band turns translucent. false keeps the plain
          shelf. Can also be set with "cinematic_home": true in a theme's config.json. -->
-    <bool name="cinematic_home">false</bool>
+    <bool name="cinematic_home">true</bool>
 
     <!-- The glow behind the dock in the focused app's colour (red for YouTube, blue for Prime Video). false keeps
          only background_color or the wallpaper behind everything. Can also be set with "ambient_glow": false in a
@@ -322,4 +344,30 @@
          colour washes down from the top edge and fades to black, brightest along the top). The cinematic shelf
          keeps its own glow. Can also be set with "glow_style": "horizon" in a theme's config.json. -->
     <string name="glow_style" translatable="false">radial</string>
+
+    <!-- My System TV's design, ported from its HTML prototype. -->
+    <!-- Header: Wi-Fi icon before a sentence-case greeting, the day name over the date, and a weather line. -->
+    <bool name="modern_header">true</bool>
+    <!-- Weather line under the clock, from Open-Meteo (no key; only these coordinates are sent), every 30 minutes. -->
+    <bool name="weather">true</bool>
+    <string name="weather_label" translatable="false">Ciudad de México</string>
+    <string name="weather_latitude" translatable="false">19.43</string>
+    <string name="weather_longitude" translatable="false">-99.13</string>
+    <!-- The sky gets stars and a moon at night, a sun by day, and slowly drifting clouds. -->
+    <bool name="sky_scene">true</bool>
+    <!-- After moving along the dock, the focused app's picture from the theme's backdrops/<package>.jpg fills the
+         screen; Home, the top bar and the rows below go back to the sky. -->
+    <!-- My System TV: off while the video backgrounds are in use; the apps' content now feeds AppContent only. -->
+    <bool name="app_backdrops">false</bool>
+    <!-- A round search button in the top bar (Google Assistant search). -->
+    <bool name="search_button">true</bool>
+    <!-- The top bar's Settings button opens the quick panel (Control Center) instead of the TV's Settings. -->
+    <bool name="settings_button_panel">true</bool>
+    <!-- A light sweep across a tile when it takes focus. -->
+    <bool name="focus_shine">true</bool>
+    <!-- An "Inicio" tile first in the dock: focusing it shows the clean sky, with no app picture. -->
+    <bool name="home_tile">true</bool>
+    <!-- Up from the dock to the top bar hides the dock and the rows below it, leaving a clean sky; Down brings
+         them back. -->
+    <bool name="clean_on_top_bar">true</bool>
 </resources>
