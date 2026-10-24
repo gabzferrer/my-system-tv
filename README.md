@@ -16,6 +16,18 @@
 - 🌤️ Reloj, fecha y clima de tu ciudad (Open-Meteo, sin cuenta).
 - 🧹 Además, todo lo de Clean Your TV para quitar las apps de fábrica, siempre desactivando y nunca desinstalando.
 
+## Cómo lo hice
+
+Sin escribir código yo: todo fue platicando con Claude Code en mi MacBook.
+
+1. En la tele activé las **Opciones de desarrollador**, la **depuración USB** y la **depuración por red**, y le pasé la **IP de la tele** a Claude Code.
+2. Claude respaldó todo y **desactivó** (sin desinstalar) las apps de fábrica que no uso, siguiendo [PROMPT.md](PROMPT.md).
+3. Le fui pasando **capturas de pantalla de referencia** (cómo se ven tvOS y **Liquid Glass**) y le pedí que **investigara** el estilo. Con eso armamos una **vista previa web** del diseño, y sobre ella fui pidiendo cambios hasta que me gustaba.
+4. Lo aprobado se pasaba a la tele. Claude tomaba **capturas de la tele**, las revisaba y corregía, y así fuimos iterando.
+5. Le dimos a la app el **permiso de la guía de programas**, que es lo que le deja leer el "Seguir viendo" y las recomendaciones de cada app.
+6. Medimos la **fluidez** cuadro por cuadro y optimizamos sin quitar efectos.
+7. Al final **apagué la depuración**.
+
 ## Rendimiento en mi tele
 
 Tiempo por cuadro (para ir a 60 fps hay que quedar abajo de 16.7 ms), medido con `dumpsys gfxinfo` en la Hisense 55A6N:
@@ -77,6 +89,7 @@ Hay cinco lugares, cada uno con su nombre en el Centro de control: `gg-sunset` (
 - **Tu nombre y tu ciudad:** edita [`themes/my-system-tv/config.json`](themes/my-system-tv/config.json) (`greeting_name`, `weather_label`, `weather_latitude`, `weather_longitude`) y súbelo con `TV_HOST=<ip> tools/theme.sh themes/my-system-tv`. Sirve también con la APK lista.
 - **Tus iconos:** si compilas, copia [`launcher/personal-ejemplo/res`](launcher/personal-ejemplo) a `launcher/app/src/release/res` y pon ahí tus imágenes y textos. Esa carpeta reemplaza a la original solo en tu compilación y git nunca la sube. Usa solo imágenes que tengas derecho a usar.
 - **Los modos:** el botón redondo del Centro de control cambia entre **Modo B** y **Modo A + B**.
+- **Con Claude Code es más fácil:** deja tus imágenes y videos en tu computadora y pídele que los ponga en su lugar, en vez de los que trae.
 
 ## Permisos
 
